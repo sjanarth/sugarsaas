@@ -1,4 +1,4 @@
-package com.sugarsaas.api.runner;
+package com.sugarsaas.api.loader;
 
 import com.sugarsaas.api.identity.privilege.Privilege;
 import com.sugarsaas.api.identity.privilege.PrivilegeRepository;
@@ -7,8 +7,7 @@ import com.sugarsaas.api.identity.role.Role;
 import com.sugarsaas.api.identity.role.RoleRepository;
 import com.sugarsaas.api.identity.role.SeededRole;
 import com.sugarsaas.api.identity.role.SugarSeededRoles;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -22,12 +21,11 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
+@Slf4j
 @Order(12)
 @Component
 public class SeededRolesLoader extends AbstractSeedDataLoader implements CommandLineRunner
 {
-    private static final Logger logger = LoggerFactory.getLogger(SeededRolesLoader.class);
-
     @Autowired
     private PrivilegeRepository privilegeRepository;
 
@@ -48,11 +46,11 @@ public class SeededRolesLoader extends AbstractSeedDataLoader implements Command
          */
         Set<Class<? extends SeededRole>> seededRoleClasses = scanProviders(SeededRole.class);
         forceLoadAllSeededRoleClasses(seededRoleClasses);
-        logger.info("Processing "+SugarSeededRoles.class.getCanonicalName());
+        log.info("Processing {} ", SugarSeededRoles.class.getCanonicalName());
         loadSeededRoles(SugarSeededRoles.values());
         for (Class<? extends SeededRole> cls : seededRoleClasses) {
             if (!cls.getCanonicalName().equals(SugarSeededRoles.class.getCanonicalName())) {
-                logger.info("Processing " +cls.getCanonicalName());
+                log.info("Processing {} ", cls.getCanonicalName());
                 loadSeededRoles(cls.getEnumConstants());
             }
         }
@@ -75,7 +73,7 @@ public class SeededRolesLoader extends AbstractSeedDataLoader implements Command
                 r.setDescription(sr.getDescription());
                 r.setSeeded(true);
                 r.setPrivileges(mapSeededPrivileges2Privileges(sr.getPrivileges()));
-                logger.info("  Loading "+sr.getOrigin()+" Seeded Role "+sr.getName());
+                log.info("  Loading {} Seeded Role {} ", sr.getOrigin(), sr.getName());
                 roleRepository.saveAndFlush(r);
             } else {
                 boolean syncNeeded = false;
@@ -99,7 +97,7 @@ public class SeededRolesLoader extends AbstractSeedDataLoader implements Command
                     r.setDescription(sr.getDescription());
                     r.getPrivileges().clear();
                     r.setPrivileges(mapSeededPrivileges2Privileges(sr.getPrivileges()));
-                    logger.info("  Updating "+sr.getOrigin()+" Seeded Role "+sr.getName());
+                    log.info("  Updating {} Seeded Role {} ", sr.getOrigin(), sr.getName());
                     roleRepository.saveAndFlush(r);
                 }
             }

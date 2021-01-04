@@ -18,7 +18,7 @@ public class SeedDataConfiguration
     @Value("${com.sugarsaas.seed-data-packages}")
     private String[] seedDataPackages;
 
-    @Bean
+    @Bean("SeedDataConfiguration")
     public ConfigurationBuilder seedDataConfigurationBuilder()  {
         ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
         Collection<URL> allSDPs = ClasspathHelper.forPackage("com.sugarsaas.api");

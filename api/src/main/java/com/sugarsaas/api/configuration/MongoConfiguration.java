@@ -7,9 +7,9 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @Configuration
 @EnableMongoAuditing
 @EnableMongoRepositories({
-        "com.sugarsaas.api.attachment",
-        "com.sugarsaas.api.preference",
-        "com.sugarsaas.api.tag"})
+    "com.sugarsaas.api.attachment",
+    "com.sugarsaas.api.preference",
+    "com.sugarsaas.api.tag"})
 public class MongoConfiguration
 {
 }

@@ -6,7 +6,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EnableJpaAuditing
-@EnableJpaRepositories({"com.sugarsaas.api.identity","com.sugarsaas.api.tenancy"})
+@EnableJpaRepositories({
+    "com.sugarsaas.api.identity",
+    "com.sugarsaas.api.tenancy",
+    "com.sugarsaas.api.refdata"
+})
 public class MySQLConfiguration
 {
 }

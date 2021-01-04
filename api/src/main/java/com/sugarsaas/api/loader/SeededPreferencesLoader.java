@@ -1,4 +1,4 @@
-package com.sugarsaas.api.runner;
+package com.sugarsaas.api.loader;
 
 import com.sugarsaas.api.preference.Preference;
 import com.sugarsaas.api.preference.PreferenceRepository;
@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @Slf4j
-@Order(21)
+@Order(13)
 @Component
 public class SeededPreferencesLoader extends AbstractSeedDataLoader implements CommandLineRunner
 {

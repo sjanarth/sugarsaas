@@ -1,4 +1,4 @@
-package com.sugarsaas.api.runner;
+package com.sugarsaas.api.loader;
 
 import com.sugarsaas.api.identity.privilege.Privilege;
 import com.sugarsaas.api.identity.privilege.PrivilegeRepository;

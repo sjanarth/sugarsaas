@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Privilege extends AuditableEntity
 {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name="name")
