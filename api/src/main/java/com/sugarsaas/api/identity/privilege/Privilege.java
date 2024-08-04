@@ -1,5 +1,6 @@
 package com.sugarsaas.api.identity.privilege;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sugarsaas.api.core.AuditableEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,19 +10,19 @@ import javax.persistence.*;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name="sugar_privileges")
-public class Privilege extends AuditableEntity
-{
+@Table(name = "sugar_privileges")
+public class Privilege extends AuditableEntity {
+
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
-    @Column(name="seeded", columnDefinition="BIT(1)")
-    private boolean seeded = true;
+    @Column(name = "seeded") //, columnDefinition="BIT(1)")
+    private boolean seeded = false;
 }

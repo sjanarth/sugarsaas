@@ -26,8 +26,9 @@ public class RefDataCountrySubDivisionLoader implements CommandLineRunner
 
     @Override
     public void run(String... args) throws Exception {
+        /*
         log.info("Processing CountrySubDivisions reference data");
-        final String FROM_RESOURCE = "ref_subdivs.csv";
+        final String FROM_RESOURCE = "data/ref_subdivs.csv";
         final String FROM_THE_WEB = "https://gist.github.com/planemad/73fb92db731a9f2004b0e1ec50776b4b#file-iso_3166-2_subdivision_codes-csv";
         URL url = getClass().getClassLoader().getResource(FROM_RESOURCE);
         try (final BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
@@ -42,6 +43,7 @@ public class RefDataCountrySubDivisionLoader implements CommandLineRunner
                 record = br.readLine();
             }
         }
+         */
     }
 
     public Optional<CountrySubDivision> parse(String record) {

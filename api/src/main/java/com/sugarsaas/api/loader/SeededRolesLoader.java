@@ -72,6 +72,7 @@ public class SeededRolesLoader extends AbstractSeedDataLoader implements Command
                 r.setName(sr.getName());
                 r.setDescription(sr.getDescription());
                 r.setSeeded(true);
+                List<SeededPrivilege> sp = sr.getPrivileges();
                 r.setPrivileges(mapSeededPrivileges2Privileges(sr.getPrivileges()));
                 log.info("  Loading {} Seeded Role {} ", sr.getOrigin(), sr.getName());
                 roleRepository.saveAndFlush(r);

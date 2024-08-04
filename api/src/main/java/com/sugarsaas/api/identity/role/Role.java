@@ -24,10 +24,10 @@ public class Role extends AuditableEntity
     @Column(name="description")
     private String description;
 
-    @Column(name="seeded", columnDefinition="BIT(1)")
+    @Column(name="seeded") //, columnDefinition="BIT(1)")
     private boolean seeded = true;
 
-    @ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.MERGE)
     @JoinTable(name="sugar_role_privileges",
             joinColumns={@JoinColumn(name="role_id", referencedColumnName="id", nullable=false, updatable=false)},
             inverseJoinColumns={@JoinColumn(name="privilege_id", referencedColumnName="id", nullable=false, updatable=false)})

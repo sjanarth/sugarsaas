@@ -1,91 +1,55 @@
 package com.sugarsaas.api.identity;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sugarsaas.api.core.AbstractTest;
+import com.sugarsaas.api.core.AuditableEntity;
 import com.sugarsaas.api.identity.privilege.Privilege;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import com.sugarsaas.api.identity.privilege.PrivilegeRepository;
+import com.sugarsaas.api.identity.user.UserRepository;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class PrivilegeControllerTest extends AbstractTest
+public class PrivilegeControllerTest extends AbstractTest<Privilege>
 {
-    private static Privilege createdPrivilege = null;
-    private static final String TEST_PRIVILEGE_JSON =
-            "{\"name\":\"TestPrivilege\",\"description\":\"TestPrivilegeDescription\"}";
+    @Autowired
+    PrivilegeRepository privilegeRepository;
 
-    @Test
-    public void test1_testCreate() throws Exception {
-        System.out.println("*** Running testCreate");
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/privilege")
-                .content(TEST_PRIVILEGE_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON);
-        MvcResult result = mvc.perform(request)
-                //.andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andReturn();
-        createdPrivilege = new ObjectMapper().readValue(result.getResponse().getContentAsString(), Privilege.class);
-        System.out.println("createdPrivilege="+createdPrivilege);
+    @Override
+    protected String getJsonForCreate() {
+        return "{\"name\":\"TestPrivilege\",\"description\":\"TestPrivilegeDescription\"}";
     }
 
-    @Test
-    public void test2_testCreateUnique() throws Exception {
-        System.out.println("*** Running testCreateUnique");
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/privilege")
-                .content(TEST_PRIVILEGE_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON);
+    @Override
+    protected Privilege lookupEntity() {
+        return privilegeRepository.findByName("TestPrivilege").get();
+    }
+
+    @Override
+    protected void update(Privilege privilege) {
+        //privilege.setName("TestPrivilege2");
+        privilege.setDescription("TestPrivilegeDescription2");
+
+    }
+
+    @Override
+    protected void checkUpdate(ResultActions resultActions) {
         try {
-            mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest());
-        } catch (Exception ex)  {
-            Assert.assertTrue(hasSQLIntegrityConstraintViolationException(ex));
+            // name is used to lookup for testDelete
+            //resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.name").value("TestPrivilege2"))
+            resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.description").value("TestPrivilegeDescription2"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-    }
 
-    private boolean hasSQLIntegrityConstraintViolationException (Throwable ex)   {
-        //System.out.println("***"+ex);
-        if (ex instanceof SQLIntegrityConstraintViolationException)
-            return true;
-        if (ex.getCause() != null)
-            return hasSQLIntegrityConstraintViolationException (ex.getCause());
-        return false;
-    }
-
-    @Test
-    public void test3_testUpdate() throws Exception {
-        System.out.println("*** Running testUpdate");
-        createdPrivilege.setName("TestPrivilege2");
-        createdPrivilege.setDescription("TestPrivilegeDescription2");
-        mvc.perform(MockMvcRequestBuilders
-                .put("/api/privilege/{id}", createdPrivilege.getId())
-                .content(new ObjectMapper().writeValueAsString(createdPrivilege))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("TestPrivilege2"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("TestPrivilegeDescription2"));
-    }
-
-    @Test
-    public void test4_testDelete() throws Exception {
-        System.out.println("*** Running testDelete");
-        System.out.println("createdPrivilege="+createdPrivilege);
-        mvc.perform(MockMvcRequestBuilders
-                .delete("/api/privilege/{id}", createdPrivilege.getId())
-                .content(new ObjectMapper().writeValueAsString(createdPrivilege))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

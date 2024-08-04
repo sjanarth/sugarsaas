@@ -1,5 +1,6 @@
 package com.sugarsaas.api.loader;
 
+import com.sugarsaas.util.SugarUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,10 +21,15 @@ public class SugarSchemaLoader
 
     @Bean(name="SugarSchemaLoader")
     public DataSourceInitializer dataSourceInitializer(@Qualifier("dataSource") final DataSource dataSource) {
-        // First load the Sugar schema itself
-        logger.info("SchemaLoader running sugar_create.sql");
         ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
-        resourceDatabasePopulator.addScript(new ClassPathResource("/sugar_create.sql"));
+        try {
+            // First load the Sugar schema itself
+            String createSQLScript = "sugar_create_" + SugarUtils.getDatabaseType(dataSource) + ".sql";
+            logger.info("SchemaLoader running " + createSQLScript);
+            resourceDatabasePopulator.addScript(new ClassPathResource("/db/" + createSQLScript));
+        } catch (Exception ex)  {
+            ex.printStackTrace(System.err);
+        }
         DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
         dataSourceInitializer.setDataSource(dataSource);
         dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);

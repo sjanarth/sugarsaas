@@ -83,7 +83,7 @@ public class SignupController
             //@RequestParam("email") String email,
             @RequestParam("image") MultipartFile image)  {
         log.info("Testing now");
-        User user = userRepository.findById(5).get(); // .findByEmail("sjanarth@gmail.com").get();
+        User user = userRepository.findById(Long.valueOf(5)).get(); // .findByEmail("sjanarth@gmail.com").get();
         log.info("  -> Found user "+user);
         Collection<Preference> preferences = preferenceService.getPreferences(user);
         log.info("  -> Found {} preferences", preferences.size());

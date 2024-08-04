@@ -31,7 +31,7 @@ public class TenancyGroup extends AuditableEntity
     @Column(name="email")
     private String email;
 
-    @Column(name="active", columnDefinition="BIT(1)")
+    @Column(name="active") //, columnDefinition="BIT(1)")
     private boolean active = true;
 
     /*

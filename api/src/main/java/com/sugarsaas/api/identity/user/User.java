@@ -25,7 +25,7 @@ public class User extends AuditableEntity
 {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name="firstname")
     private String firstName;
@@ -36,10 +36,10 @@ public class User extends AuditableEntity
     @Column(name="email")
     private String email;
 
-    @Column(name="password") @JsonProperty(access=JsonProperty.Access.WRITE_ONLY)
+    @Column(name="password") //@JsonProperty(access=JsonProperty.Access.WRITE_ONLY)
     private String passWord;
 
-    @Column(name="active", columnDefinition="BIT(1)")
+    @Column(name="active") //, columnDefinition="BIT(1)")
     private boolean active = true;
 
     /*
